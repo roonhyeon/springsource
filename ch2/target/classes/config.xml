@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 스프링 컨테이너(스프링 프레임워크)가 관리할 Bean(인스턴스) 기록: 이 클래스에 해당하는 인스턴스를 생성(new)하고 관리해줘, id에는 찾아올 거 적는다. -->
+<bean id="msg" class="com.spring.basic.MessageBeanEn" /> 
+<bean id="samsung" class="com.spring.basic.SamsungTV" /> 
+
+</beans>

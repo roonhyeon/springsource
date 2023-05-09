@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="speaker1" class="com.spring.dependency.SonySpeaker" />
+<bean id="speaker2" class="com.spring.dependency.AppleSpeaker" />
+
+<!-- 생성자 주입(Constructor Injection) 
+<bean id="tv" class="com.spring.dependency.SamsungTV">
+	<constructor-arg ref="speaker2" />
+</bean>
+-->
+
+<!-- Setter Injection -->
+<bean id="tv" class="com.spring.dependency.SamsungTV">
+	<property name="speaker" ref="speaker1" />
+</bean>
+</beans>
