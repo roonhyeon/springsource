@@ -18,21 +18,21 @@ public class BookMain { // 화면에 출력해주기용 클래스
 		BookService service=(BookService)ctx.getBean("bookService"); // bookService에 해당하는 거 찾아와 봐
 		
 		// 도서 추가
-//		BookDTO insertDto=new BookDTO(1006, "스프링", "쿨러", 15000, "스프링 프레임워크 의존성");
-//		if(service.insertBook(insertDto)) {
-//			System.out.println("입력 성공");
-//		}
+		BookDTO insertDto=new BookDTO(1015, "모두의 알고리즘", "이승찬", 25000, "파이썬으로 구현하는 알고리즘");
+		if(service.insertBook(insertDto)) {
+			System.out.println("입력 성공");
+		}
 		
 		// 도서 수정
 //		BookDTO updateDto=new BookDTO();
 //		updateDto.setCode(1006);
 //		updateDto.setPrice(25000);
-		if(service.updateBook(30000,1006)) {
-			System.out.println("수정 성공");
-		} // Exception in thread "main" org.mybatis.spring.MyBatisSystemException: 
-		  // nested exception is org.apache.ibatis.binding.BindingException: Parameter 'price' not found. 
-		  // Available parameters are [arg1, arg0, param1, param2]
-		  // 해결방법: @Param을 사용해준다.
+//		if(service.updateBook(30000,1006)) {
+//			System.out.println("수정 성공");
+//		} // Exception in thread "main" org.mybatis.spring.MyBatisSystemException: 
+//		  // nested exception is org.apache.ibatis.binding.BindingException: Parameter 'price' not found. 
+//		  // Available parameters are [arg1, arg0, param1, param2]
+//		  // 해결방법: @Param을 사용해준다.
 //		
 //		// 특정 도서 조회
 //		BookDTO row=service.getBook(1006);
