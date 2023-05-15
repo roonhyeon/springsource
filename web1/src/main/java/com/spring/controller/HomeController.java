@@ -39,4 +39,9 @@ public class HomeController {
 		return "result";
 	}
 	
+//	@GetMapping("/add")
+//	public void addForm() {
+//		
+//	} //ambiguous mapping 오류 발생(경로는 중복으로 쓰면 안된다.)
+	
 }

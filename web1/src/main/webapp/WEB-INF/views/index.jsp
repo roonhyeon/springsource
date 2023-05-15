@@ -15,6 +15,9 @@
         <li>
             <a href="/member/register">회원가입</a>
         </li>
+        <li>
+            <a href="/board/register">글 등록</a>
+        </li>
     </ul>
 </body>
 </html>
