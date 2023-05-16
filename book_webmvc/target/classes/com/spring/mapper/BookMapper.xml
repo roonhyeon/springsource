@@ -15,4 +15,29 @@
  <select id="read" resultType="com.spring.domain.BookDTO">
      select * from booktbl where code=#{code}
  </select>
+ 
+ <update id="update">
+     update booktbl set price=#{price} where code=#{code}
+ </update>
+ 
+ <delete id="delete">
+     delete from booktbl where code=#{code}
+ </delete>
+ 
+ <select id="search" resultType="com.spring.domain.BookDTO">
+ <!-- 조건(title or writer)이 criteria 변수에 들어있는 상황
+ select * from booktbl where writer='홍길동'
+ select * from booktbl where title='자바'
+ -->
+     <!-- select code, title, writer, price from booktbl where
+     <if test="criteria == 'writer'.toString()">
+         writer=#{keyword}
+     </if>
+     <if test="criteria == 'title'.toString()">
+         title like '%'||#{keyword}||'%'
+     </if> -->
+     
+     <!-- ${} => 변수 -->
+     select code, title, writer, price from booktbl where ${criteria} like '%'||#{keyword}||'%'
+ </select>
 </mapper>

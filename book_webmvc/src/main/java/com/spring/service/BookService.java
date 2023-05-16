@@ -11,6 +11,5 @@ public interface BookService {
 	public BookDTO get(int code);
 	public List<BookDTO> getList();
 	public List<BookDTO> getSearchList(String criteria, String keyword);
-	
 
 }

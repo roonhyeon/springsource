@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/header.jsp"%>
 <h1>도서 목록</h1>
-<form class="row g-3 justify-content-center" action='<c:url value="/search.do"/>'>
+<form class="row g-3 justify-content-center" action='<c:url value="/book/search"/>'>
  <div class="col-auto">
     <select class="form-select" name="criteria">
       <option <c:out value="${searchDTO.criteria==null?'selected':''}" />>검색기준선택</option>

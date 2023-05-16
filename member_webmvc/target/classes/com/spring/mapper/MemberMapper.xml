@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.mapper.MemberMapper">
+<!-- 암호화된 비번 가져오기 -->
+<select id="getPass" resultType="java.lang.String">
+    select password from membertbl where userid=#{userid}
+</select>
+
+<!-- 로그인: userid, password 일치시 userid, name 조회 -->
+<select id="login" resultType="com.spring.domain.AuthDTO">
+    select userid, name from membertbl where userid=#{userid}
+</select>
+
+<insert id="insert">
+    insert into membertbl(userid, password, name, gender, email) values(#{userid}, #{password}, #{name}, #{gender}, #{email})
+</insert>
+
+</mapper>

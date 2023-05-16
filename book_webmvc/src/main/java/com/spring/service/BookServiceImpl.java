@@ -22,12 +22,12 @@ public class BookServiceImpl implements BookService{ // DB 메서드 호출하�
 
 	@Override
 	public boolean delete(int code) {
-		return false;
+		return mapper.delete(code)==1 ? true:false;
 	}
 
 	@Override
 	public boolean update(BookDTO dto) {
-		return false;
+		return mapper.update(dto)==1 ? true:false;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService{ // DB 메서드 호출하�
 
 	@Override
 	public List<BookDTO> getSearchList(String criteria, String keyword) {
-		return null;
+		return mapper.search(criteria, keyword);
 	}
 
 }
