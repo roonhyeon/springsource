@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.mapper.BoardMapper">
+
+<!-- 전체 조회 -->
+<select id="list" resultType="com.spring.domain.BoardDTO">
+    select bno, title, writer, regdate, updatedate from spring_board order by bno desc, regdate desc
+</select>
+
+<!-- 게시글 등록 -->
+<insert id="insert">
+    insert into spring_board(bno, title, content, writer) values(seq_board.nextval, #{title}, #{content}, #{writer})
+</insert>
+
+
+</mapper>

@@ -1,6 +1,5 @@
 package com.spring.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.domain.AuthDTO;
+import com.spring.domain.ChangeDTO;
 import com.spring.domain.LoginDTO;
 import com.spring.domain.MemberDTO;
 import com.spring.service.MemberService;
@@ -87,6 +88,65 @@ public class MemberController {
 		
 		// 회원가입 성공시 로그인 페이지로 이동
 		return "/member/login";
+	}
+	
+	// 중복 아이디 점검
+	@PostMapping("/dupId")
+	@ResponseBody // 컨트롤러 작업이 완료될 때 결과값으로 리턴(View Resolver를 동작시키지 않는다.)
+	public String dupIdCheck(String userid) {
+		log.info("duplicate request "+userid);
+		
+		boolean idCheck=service.dupId(userid);
+		
+		if(idCheck) {
+			return "true"; // /WEB-INF/views/test.jsp
+		}else {
+			return "false"; // /WEB-INF/views/false.jsp
+		}
+	}
+	
+	// 회원탈퇴: leave.jsp 띄어주기
+	@GetMapping("/leave")
+	public void leaveGet() {
+		log.info("leave form request");
+	}
+	
+	// 회원탈퇴 성공 시 index로 이동
+	@PostMapping("/leave")
+	public String leave(LoginDTO loginDTO, HttpSession session) {
+		log.info("leave request ");
+		
+		boolean pwdCheck=service.remove(loginDTO);
+		
+		if(pwdCheck) {
+			session.invalidate(); // session 해제
+			return "redirect:/";
+		}
+		return "redirect:/member/leave";
+	}
+	
+	// changePwd.jsp 보여주기
+	@GetMapping("/changePwd")
+	public void changeForm() {
+		log.info("change form request");
+	}
+	
+	@PostMapping("/changePwd")
+	public String change(ChangeDTO changeDTO, HttpSession session) {
+		log.info("change request "+changeDTO);
+		
+		if(changeDTO.passwordEquals()) {
+			// 현재 비밀번호 일치 확인
+			// 일치 시(true) 비밀번호 변경 & session 제거 & 로그인 페이지 보여주기
+			// false: 비밀번호 변경 페이지 보여주기
+			boolean pwd=service.update(changeDTO);
+			
+			if(pwd) {
+				session.invalidate();
+				return "redirect:/member/login";
+			}
+		}
+		return "redirect:/member/changePwd";
 	}
 
 }

@@ -15,4 +15,18 @@
     insert into membertbl(userid, password, name, gender, email) values(#{userid}, #{password}, #{name}, #{gender}, #{email})
 </insert>
 
+<!-- 중복 아이디 체크 -->
+<select id="dupId" resultType="java.lang.Integer">
+    select count(*) from membertbl where userid=#{userid}
+</select>
+
+<!-- 회원탈퇴 -->
+<delete id="leave">
+    delete from membertbl where userid=#{userid}
+</delete>
+
+<!-- 비밀번호 변경 -->
+<update id="update">
+    update membertbl set password=#{newPwd} where userid=#{userid}
+</update>
 </mapper>

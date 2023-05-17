@@ -23,6 +23,13 @@
 	
 	<context:component-scan base-package="com.spring.controller" />
 	
+	<!-- interceptor 설정 -->
+	<beans:bean id="auth" class="com.spring.interceptor.AuthCheckInterceptor"/>
+	<interceptors>
+	    <interceptor>
+	        <mapping path="/member/changePwd"/>
+	        <beans:ref bean="auth"/>
+	    </interceptor>
+	</interceptors>	
 	
-	
-</beans:beans>
+    </beans:beans>

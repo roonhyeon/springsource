@@ -3,11 +3,11 @@
 <%@ include file="../include/header.jsp"%>
     <h1>회원탈퇴</h1>
 <main class="form-signin w-100 m-auto">
-	<form method="post" action='<c:url value="/leave.do"/>'>
+	<form method="post" action='<c:url value="/member/leave"/>'>
 		<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
 		<div class="form-floating">
-			<input type="text" class="form-control" id="floatingInput" placeholder="userid" name="userid" value="${loginDto.userid}">
+			<input type="text" class="form-control" id="floatingInput" placeholder="userid" name="userid" value="${authDTO.userid}"> <!-- 현재 session에 authDTO로 담겨있다. -->
 			<label for="floatingInput">UserId</label>
 		</div>
 		<div class="form-floating">
