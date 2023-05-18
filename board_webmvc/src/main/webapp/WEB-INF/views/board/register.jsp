@@ -10,19 +10,20 @@
 		<form action="" method="post">
 			<div class="form-group">
 				<label for="title">Title</label>
-				<input type="text" class="form-control" id="title" placeholder="title" name="title">
+				<input type="text" class="form-control" id="title" placeholder="title" name="title" required>
 			</div>
 			<div class="form-group">
 				<label for="content">Content</label>
-				<textarea class="form-control" id="content" rows="10" name="content" placeholder="content"></textarea>
+				<textarea class="form-control" id="content" rows="10" name="content" placeholder="content" required></textarea>
 			</div>
 			<div class="form-group">
 				<label for="writer">Writer</label>
-				<input type="text" class="form-control" id="writer" placeholder="writer" name="writer">
+				<input type="text" class="form-control" id="writer" placeholder="writer" name="writer" required>
 			</div>
 			<button type="submit" class="btn btn-primary">등록</button>
 			<button type="reset" class="btn btn-secondary">취소</button>
 		</form>
 	</div>
 </div>
+<script src="/resources/js/register.js"></script>
 <%@ include file="../include/footer.jsp" %>

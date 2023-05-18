@@ -2,15 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.mapper.BoardMapper">
 
-<!-- 전체 조회 -->
-<select id="list" resultType="com.spring.domain.BoardDTO">
+<!-- 전체 조회(페이지 나누기 전) -->
+<!-- <select id="list" resultType="com.spring.domain.BoardDTO">
     select bno, title, writer, regdate, updatedate from spring_board order by bno desc, regdate desc
+</select> -->
+
+<!-- 전체 조회(페이지 나눈 후) -->
+<select id="list" resultType="com.spring.domain.BoardDTO">
+<![CDATA[
+SELECT BNO, TITLE, WRITER, REGDATE, UPDATEDATE
+FROM (SELECT /*+INDEX_DESC(SPRING_BOARD PK_SPRING_BOARD)*/ ROWNUM RN, BNO, TITLE, WRITER, REGDATE, UPDATEDATE
+      FROM SPRING_BOARD
+      WHERE ROWNUM<=#{pageNum}*#{amount})
+WHERE RN>(#{pageNum}-1)*#{amount}
+]]> <!-- 이 안에 넣어주면 <,> 기호가 크다, 작다를 의미하는 기호야~라고 인식시켜 주는 것이다. -->
 </select>
+
+<!-- 전체 게시물 개수: totalCnt -->
+<select id="totalCnt" resultType="java.lang.Integer">
+    select count(*) from spring_board
+</select>
+
 
 <!-- 게시글 등록 -->
 <insert id="insert">
-    insert into spring_board(bno, title, content, writer) values(seq_board.nextval, #{title}, #{content}, #{writer})
+    <!-- mybatis에 정의된 기능: 주로 pk 값을 미리 SQL을 통해서 처리해 두고 특정한 이름으로 결과를 보관한다. => seq_board.nextval 이 값을 bno에 담아줘 -->
+    <selectKey keyProperty="bno" order="BEFORE" resultType="int">
+        select seq_board.nextval from dual
+    </selectKey>
+    <!-- 그래서 여기도 동일하게 DTO의 bno에 seq_board.nextval 값이 담기게 되어서 그냥 bno만 호출해와도 된다. -->
+    insert into spring_board(bno, title, content, writer) values(#{bno}, #{title}, #{content}, #{writer})
 </insert>
 
+<!-- 특정 번호의 게시물 조회 -->
+<select id="read" resultType="com.spring.domain.BoardDTO">
+    select bno, title, content, writer from spring_board where bno=#{bno}
+</select>
+
+<!-- 게시글 수정: bno 일치 시(title, content, updatedate) -->
+<update id="modify">
+    update spring_board set title=#{title}, content=#{content}, updatedate=sysdate where bno=#{bno}
+</update>
+
+<!-- 게시글 삭제 -->
+<delete id="remove">
+    delete from spring_board where bno=#{bno}
+</delete>
 
 </mapper>
