@@ -8,30 +8,41 @@
 <div class="d-flex">
      <!-- 검색 부분 -->
      <div class="flex-grow-1 pb-2 justify-content-between">
-         <form action="">
+         <form action="" id="searchForm">
+         	<!-- 검색 버튼 클릭 시 검색 결과는 무조건 1page 부터 봐야 함 -->
+         	<input type="hidden" name="page" value="1" />
+  			<input type="hidden" name="amount" value="${cri.amount}" />
              <div class="form-row">
                  <div class="form-group col-3">
                      <select name="type" id="type" class="form-control">
-                         <option value="">------------</option>
-                         <option value="T">제목</option>
-                         <option value="C">내용</option>
-                         <option value="W">작성자</option>
-                         <option value="TC">제목 or 내용</option>
-                         <option value="TW">제목 or 작성자</option>
-                         <option value="TCW">제목 or 내용 or 작성자</option>                     
+                         <option value="" <c:out value="${cri.type == ''?'selected':''}"/>>------------</option>
+                         <option value="T" <c:out value="${cri.type == 'T'?'selected':''}"/>>제목</option>
+                         <option value="C" <c:out value="${cri.type == 'C'?'selected':''}"/>>내용</option>
+                         <option value="W" <c:out value="${cri.type == 'W'?'selected':''}"/>>작성자</option>
+                         <option value="TC" <c:out value="${cri.type == 'TC'?'selected':''}"/>>제목 or 내용</option>
+                         <option value="TW" <c:out value="${cri.type == 'TW'?'selected':''}"/>>제목 or 작성자</option>
+                         <option value="TCW" <c:out value="${cri.type == 'TCW'?'selected':''}"/>>제목 or 내용 or 작성자</option>                     
                      </select>
                  </div>
                  <div class="form-group col-5">
-                     <input type="text" name="keyword" id="keyword" class="form-control"/>
+                     <input type="text" name="keyword" id="keyword" class="form-control" value="${cri.keyword}"/>
                  </div>
                  <div class="form-group col-3">
-                     <button type="button" class="btn btn-info">검색</button>
+                     <button type="submit" class="btn btn-info">검색</button>
                  </div>
              </div>
          </form>
      </div>
      <!-- 검색 종료 -->
-     
+     <div class="pb-2 px-2">
+		<select name="amount" id="amount" class="form-control">
+			<!-- pageDTO.cri.amount도 가능 -->
+			<option value="10" <c:out value="${cri.amount == 10?'selected':''}"/>>10</option>
+			<option value="20" <c:out value="${cri.amount == 20?'selected':''}"/>>20</option>
+			<option value="30" <c:out value="${cri.amount == 30?'selected':''}"/>>30</option>
+			<option value="40" <c:out value="${cri.amount == 40?'selected':''}"/>>40</option>
+		</select>
+	</div>
      <div class="pb-2">
          <button class="btn btn-xs btn-success" type="button" onclick="location.href='/board/register'">Register New Board</button>
      </div>
@@ -50,7 +61,7 @@
 		<c:forEach var="dto" items="${list}">
 			<tr>
 				<th scope="row">${dto.bno}</th>
-				<td><a href="/board/read?bno=${dto.bno}">${dto.title}</a></td>
+				<td><a href="${dto.bno}" class="move">${dto.title}</a></td>
 				<td>${dto.writer}</td>
 				<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${dto.regDate}" /></td>
 				<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${dto.updateDate}" /></td>
@@ -67,7 +78,7 @@
 		</c:if>
 		
 		<c:forEach begin="${pageDTO.startPage}" end="${pageDTO.endPage}" var="idx">
-			<li class="page-item ${pageDTO.cri.pageNum==idx?'active':''}"><a class="page-link" href="${idx}">${idx}</a></li>
+			<li class="page-item ${pageDTO.cri.page==idx?'active':''}"><a class="page-link" href="${idx}">${idx}</a></li>
 		</c:forEach>
 		
 		<c:if test="${pageDTO.next}">
@@ -96,6 +107,16 @@
     </div>
   </div>
 </div>
+<!-- 페이지 나누기 링크 처리를 위한 폼 -->
+<form action="/board/list" id="operForm">
+	<!-- pageDTO.cri.page 가능 -->
+	<!-- input bno는 list.js에서 정의 -->
+    <input type="hidden" name="page" value="${cri.page}" />
+    <input type="hidden" name="amount" value="${cri.amount}" />
+    <!-- 페이지 번호를 이동해도 검색어를 유지하기 위해 코드 추가 -->
+    <input type="hidden" name="type" value="${cri.type}" />
+    <input type="hidden" name="keyword" value="${cri.keyword}" />
+</form>
 <script>
     const result='${result}'; // 컨트롤러에 정의한 것에 따라 1. result='success'; => 수정 및 삭제 시 result에 넘어오는 값, 2. result='글 번호'; => 등록 시 result에 넘어오는 값
 </script>

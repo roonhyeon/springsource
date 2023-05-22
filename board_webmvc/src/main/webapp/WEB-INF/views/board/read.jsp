@@ -26,7 +26,12 @@
 	</div>
 </div>
 <form action="" id="operForm">
-    <input type="hidden" name="bno" value="${dto.bno}" />
+	<input type="hidden" name="bno" value="${dto.bno}" />
+    <input type="hidden" name="page" value="${cri.page}" />
+    <input type="hidden" name="amount" value="${cri.amount}" />
+    <!-- 수정 버튼 눌렀을 때 타입과 키워드 주소창에 유지 -->
+    <input type="hidden" name="type" value="${cri.type}" />
+    <input type="hidden" name="keyword" value="${cri.keyword}" />
 </form>
 <script src="/resources/js/read.js"></script>
 <%@ include file="../include/footer.jsp" %>

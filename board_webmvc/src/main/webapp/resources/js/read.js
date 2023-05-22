@@ -8,6 +8,7 @@ document.querySelector(".btn-info").addEventListener("click", () => {
   form.action = "/board/modify";
   form.submit();
 });
+
 document.querySelector(".btn-secondary").addEventListener("click", () => {
   // bno 제거하고 전송
   form.firstElementChild.remove();

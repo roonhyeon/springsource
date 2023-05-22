@@ -29,6 +29,10 @@
 </div>
 <form action="" id="operForm">
     <input type="hidden" name="bno" value="${dto.bno}" />
+    <input type="hidden" name="page" value="${cri.page}" />
+    <input type="hidden" name="amount" value="${cri.amount}" />
+    <input type="hidden" name="type" value="${cri.type}" />
+    <input type="hidden" name="keyword" value="${cri.keyword}" />
 </form>
 <script src="/resources/js/modify.js"></script>
 <%@ include file="../include/footer.jsp" %>

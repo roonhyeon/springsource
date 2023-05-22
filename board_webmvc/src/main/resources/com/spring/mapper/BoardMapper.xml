@@ -13,16 +13,47 @@
 SELECT BNO, TITLE, WRITER, REGDATE, UPDATEDATE
 FROM (SELECT /*+INDEX_DESC(SPRING_BOARD PK_SPRING_BOARD)*/ ROWNUM RN, BNO, TITLE, WRITER, REGDATE, UPDATEDATE
       FROM SPRING_BOARD
-      WHERE ROWNUM<=#{pageNum}*#{amount})
-WHERE RN>(#{pageNum}-1)*#{amount}
+      WHERE 
+]]>      
+	<include refid="criteria"></include>   
+<![CDATA[   
+      ROWNUM<=#{page}*#{amount})
+WHERE RN>(#{page}-1)*#{amount}
 ]]> <!-- 이 안에 넣어주면 <,> 기호가 크다, 작다를 의미하는 기호야~라고 인식시켜 주는 것이다. -->
 </select>
 
 <!-- 전체 게시물 개수: totalCnt -->
 <select id="totalCnt" resultType="java.lang.Integer">
     select count(*) from spring_board
+    where
+    <include refid="criteria"></include>
+    bno > 0
 </select>
 
+<!-- 동적 쿼리 
+	 board/list?page=1&amount=10&type=C&keyword=스프링 요청
+     collection="typeArr" => Criteria 객체의 getTypeArr() 메서드 실행됨 => [C] 출력
+     item="type" => 배열 요소를 접근하기 위한 변수
+-->
+<sql id="criteria">
+	<trim prefix="(" suffix=") AND" prefixOverrides="OR"> <!-- 출력되는 코드 맨 앞에 OR가 들어가면 OR는 무시해주세요. -->
+		<foreach collection="typeArr" item="type">
+			<trim prefix="OR">
+				<choose>
+					<when test="type == 'T'.toString()">
+						title like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'C'.toString()">
+						content like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'W'.toString()">
+						writer like '%'||#{keyword}||'%'
+					</when>
+				</choose>
+			</trim>
+		</foreach>
+	</trim>
+</sql>
 
 <!-- 게시글 등록 -->
 <insert id="insert">
