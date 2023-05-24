@@ -25,6 +25,42 @@
 		</form>
 	</div>
 </div>
+<!-- 댓글 작성 폼 -->
+<form action="" class="mt-3" id="replyForm">
+	<div class="form-row">
+		<div class="col-11">
+			<textarea name="reply" id="reply" rows="5" class="form-control"></textarea>
+		</div>
+		<div class="col my-2">
+			<div class="form-row my-2">
+				<input type="text" name="replyer" id="replyer" class="form-control" />
+			</div>
+			<div class="form-row my-2">
+				<button class="btn btn-success btn-block">댓글 작성</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- 댓글 목록 -->
+<div class="card mt-4">
+	<div class="card-header">
+		<i class="fa fa-comments fa-fw"></i>
+		Reply
+		<button id="addReplyBtn" class="btn btn-primary btn-sm mx-3">New Reply</button>
+	</div>
+	<div class="card-body">
+		<ul class="chat list-group list-group-flush">
+			<li class='list-group-item border-bottom' data-rno='1'>
+				<div class="d-flex justify-content-between">
+					<strong class='primary-font'>user00</strong>
+					<small class='text-muted text-right'>2023-05-24 00:00</small>
+				</div>
+				<p>Good Job!!</p>
+			</li>
+		</ul>
+	</div>
+</div>
+
 <form action="" id="operForm">
 	<input type="hidden" name="bno" value="${dto.bno}" />
     <input type="hidden" name="page" value="${cri.page}" />
@@ -33,5 +69,10 @@
     <input type="hidden" name="type" value="${cri.type}" />
     <input type="hidden" name="keyword" value="${cri.keyword}" />
 </form>
-<script src="/resources/js/read.js"></script>
+<script>
+	// 게시물 글번호 가져오기(1번째 실행)
+	const bno=${dto.bno};
+</script>
+<script src="/resources/js/reply.js"></script> <!-- 2번째 실행 -->
+<script src="/resources/js/read.js"></script> <!-- 3번째 실행 -->
 <%@ include file="../include/footer.jsp" %>

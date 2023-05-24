@@ -7,7 +7,7 @@
  */
 
 document.querySelector(".btn-primary").addEventListener("click", () => {
-  // fetch("경로").then(서버로부터 데이터 받기(적절한 타입으로 변환)).then(화면 출력).catch(에러);
+  // fetch("경로").then(서버로부터 데이터 받기(적절한 타입으로 변환)).then(화면 출력).catch(에러); =>
   fetch("/list")
     .then((response) => response.json())
     .then((data) => {
