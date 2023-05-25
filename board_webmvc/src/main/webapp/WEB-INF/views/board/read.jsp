@@ -92,6 +92,8 @@
     </div>
   </div>
 </div>
+
+
 <form action="" id="operForm">
 	<input type="hidden" name="bno" value="${dto.bno}" />
     <input type="hidden" name="page" value="${cri.page}" />

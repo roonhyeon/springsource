@@ -10,11 +10,12 @@ import lombok.ToString;
 
 @Setter @Getter @AllArgsConstructor @NoArgsConstructor @ToString
 public class BoardDTO {
-	private int bno; // 많이 들어가면 long도 가능
+	private int bno;
 	private String title;
 	private String content;
 	private String writer;
 	private Date regDate;
 	private Date updateDate;
+	private int replyCnt;
 
 }

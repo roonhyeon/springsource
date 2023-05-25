@@ -17,12 +17,66 @@ document.querySelector(".btn-secondary").addEventListener("click", () => {
 });
 
 // 댓글 보여줄 영역 가져오기
+let page = 1;
+
 let chat = document.querySelector(".chat");
-showList(1);
+showList(page);
 
-function showReplyPage(total) {}
+function showReplyPage(total) {
+  let endPage = Math.ceil(page / 10.0) * 10;
+  let startPage = endPage - 9;
+  let prev = startPage != 1;
+  let next = false;
 
-function showList(page) {
+  if (endPage * 10 >= total) {
+    endPage = Math.ceil(total / 10.0);
+  }
+  if (endPage * 10 < total) {
+    next = true;
+  }
+
+  let str = "<ul class='pagination justify-content-center'>";
+  if (prev) {
+    str +=
+      "<li class='page-item'><a class='page-link' href='" +
+      (startPage - 1) +
+      "'>Previous</a></li>";
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    let active = page == i ? "active" : "";
+    str +=
+      "<li class='page-item " +
+      active +
+      "'}><a class='page-link' href='" +
+      i +
+      "'>" +
+      i +
+      "</a></li>";
+  }
+
+  if (next) {
+    str +=
+      "<li class='page-item'><a class='page-link' href='" +
+      (endPage + 1) +
+      "'>Next</a></li>";
+  }
+
+  str += "</ul>";
+  document.querySelector(".card-footer").innerHTML = str;
+}
+
+// 댓글 페이지 나누기 숫자 클릭 시 a 태그 동작 중지
+// href에 있는 값 가져오기
+// showList(가져온 값)
+document.querySelector(".card-footer").addEventListener("click", (e) => {
+  e.preventDefault();
+  page = e.target.getAttribute("href");
+  // console.log(href);
+  showList(page);
+});
+
+function showList(pageNum) {
   // 현재 게시물에 대한 댓글 가져오기
   // reply.js의 function getList를 부르는 과정
   // page: page || 1: page 변수값이 존재하면 page 값 사용하고, 없으면 1
@@ -30,6 +84,14 @@ function showList(page) {
     console.log("read.js에서 확인");
     console.log(total); // 해당 게시물의 댓글 총 개수
     console.log(result);
+
+    // 마지막 페이지 알아내기
+    if (pageNum == -1) {
+      page = Math.ceil(total / 10.0);
+      showList(page);
+      return;
+    }
+
     // 도착한 데이터를 화면에 보여주기
     if (result == null || result.length == 0) {
       chat.innerHTML = "";
@@ -57,6 +119,7 @@ function showList(page) {
       str += "</li>";
     }
     chat.innerHTML = str;
+    showReplyPage(total); // 현 게시물에 달린 댓글 총 숫자를 이용한 페이지 나누기 함수 호출
   });
 }
 
@@ -77,6 +140,8 @@ formform.addEventListener("submit", (e) => {
       // 댓글 작성 칸 reset for writing another reply
       reply.value = "";
       replyer.value = "";
+
+      showList(-1);
     }
   );
 });
@@ -116,6 +181,7 @@ chat.addEventListener("click", (e) => {
     replyService.remove(rno, (result) => {
       if (result === "success") {
         alert("삭제 성공");
+        showList(page);
       }
     });
   }
@@ -133,11 +199,12 @@ document
 
     // replyService.update 호출
     replyService.update(updateReply, (result) => {
-      alert(result);
+      // alert(result);
 
       // 모달 창 닫기
       if (result === "success") {
         $("#replyModal").modal("hide");
+        showList(page);
       }
     });
   });
