@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.domain.Criteria;
 import com.spring.domain.ReplyDTO;
+import com.spring.domain.ReplyPageDTO;
 import com.spring.service.ReplyService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -51,12 +52,12 @@ public class ReplyController {
 	
 	// 특정 bno의 전체 댓글 가져오기: http://localhost:8080/replies/pages/bno/ + GET
 	@GetMapping("/pages/{bno}/{page}")
-	public ResponseEntity<List<ReplyDTO>> getAll(@PathVariable("bno") int bno, @PathVariable("page") int page){
+	public ResponseEntity<ReplyPageDTO> getAll(@PathVariable("bno") int bno, @PathVariable("page") int page){
 		log.info("댓글 전체 조회 "+bno);
 		
 		Criteria cri=new Criteria(page, 10);
 		
-		return new ResponseEntity<List<ReplyDTO>>(reService.readAll(cri, bno), HttpStatus.OK);
+		return new ResponseEntity<ReplyPageDTO>(reService.readAll(cri, bno), HttpStatus.OK);
 	}
 	
     // 댓글 수정: http://localhost:8080/replies/rno + PUT + 수정데이터(json)

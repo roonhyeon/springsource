@@ -46,7 +46,6 @@
 	<div class="card-header">
 		<i class="fa fa-comments fa-fw"></i>
 		Reply
-		<button id="addReplyBtn" class="btn btn-primary btn-sm mx-3">New Reply</button>
 	</div>
 	<div class="card-body">
 		<ul class="chat list-group list-group-flush">
@@ -62,6 +61,9 @@
 				</div>
 			</li>
 		</ul>
+	</div>
+	<div class="card-footer">
+		<!-- 댓글 페이지 나누기 -->
 	</div>
 </div>
 <!-- 댓글 수정 폼 -->

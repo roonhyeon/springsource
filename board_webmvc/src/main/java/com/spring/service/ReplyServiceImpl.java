@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.domain.Criteria;
 import com.spring.domain.ReplyDTO;
+import com.spring.domain.ReplyPageDTO;
 import com.spring.mapper.ReplyMapper;
 
 @Service
@@ -26,8 +27,10 @@ public class ReplyServiceImpl implements ReplyService {
 	}
 
 	@Override
-	public List<ReplyDTO> readAll(Criteria cri, int bno) {
-		return reMapper.readAll(cri, bno);
+	public ReplyPageDTO readAll(Criteria cri, int bno) {
+		List<ReplyDTO> list=reMapper.readAll(cri, bno);
+		int replyCnt=reMapper.getCountByBno(bno);
+		return new ReplyPageDTO(replyCnt, list);
 	}
 
 	@Override

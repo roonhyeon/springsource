@@ -18,15 +18,18 @@ document.querySelector(".btn-secondary").addEventListener("click", () => {
 
 // 댓글 보여줄 영역 가져오기
 let chat = document.querySelector(".chat");
-
 showList(1);
+
+function showReplyPage(total) {}
 
 function showList(page) {
   // 현재 게시물에 대한 댓글 가져오기
   // reply.js의 function getList를 부르는 과정
   // page: page || 1: page 변수값이 존재하면 page 값 사용하고, 없으면 1
-  replyService.getList({ bno: bno, page: page || 1 }, (result) => {
-    // console.log(result);
+  replyService.getList({ bno: bno, page: page || 1 }, (total, result) => {
+    console.log("read.js에서 확인");
+    console.log(total); // 해당 게시물의 댓글 총 개수
+    console.log(result);
     // 도착한 데이터를 화면에 보여주기
     if (result == null || result.length == 0) {
       chat.innerHTML = "";
@@ -108,5 +111,33 @@ chat.addEventListener("click", (e) => {
 
       $("#replyModal").modal("show");
     });
+  } else if (e.target.classList.contains("btn-danger")) {
+    // 삭제 버튼 클릭 시
+    replyService.remove(rno, (result) => {
+      if (result === "success") {
+        alert("삭제 성공");
+      }
+    });
   }
 });
+
+// 모달 창 수정 버튼이 클릭되면 댓글 수정
+document
+  .querySelector(".modal-footer .btn-primary")
+  .addEventListener("click", () => {
+    // 모달 창 안에 있는 rno, reply 가져온 후 자바스크립트 객체 생성
+    const updateReply = {
+      rno: document.querySelector(".modal-body #rno").value,
+      reply: document.querySelector(".modal-body #reply").value,
+    };
+
+    // replyService.update 호출
+    replyService.update(updateReply, (result) => {
+      alert(result);
+
+      // 모달 창 닫기
+      if (result === "success") {
+        $("#replyModal").modal("hide");
+      }
+    });
+  });
