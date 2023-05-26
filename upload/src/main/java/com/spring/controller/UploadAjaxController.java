@@ -97,8 +97,7 @@ public class UploadAjaxController {
 //	}
 
 	@PostMapping("/uploadAjax")
-	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) { // js에서 append에 걸어준 변수명과
-																							// 동일해야 한다.
+	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) { // js에서 append에 걸어준 변수명과 동일해야 한다.
 		log.info("upload request ");
 
 		List<AttachFileDTO> fileList = new ArrayList<AttachFileDTO>();
