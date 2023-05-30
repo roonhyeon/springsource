@@ -22,4 +22,4 @@
 </div>
 <script src="/resources/js/upload.js"></script>
 </body>
-</html>
+</html>   

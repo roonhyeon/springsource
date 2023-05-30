@@ -25,6 +25,24 @@
 		</form>
 	</div>
 </div>
+
+<!-- 파일 첨부 폼 -->
+<div class="row mt-3">
+	<div class="col">
+		<div class="card">
+			<div class="card-header">
+				<i class="fa fa-file"></i> 
+				파일첨부
+			</div>
+			<div class="card-body">
+				<div class="uploadResult">
+					<ul></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- 댓글 작성 폼 -->
 <form action="" class="mt-3" id="replyForm">
 	<div class="form-row">
@@ -41,6 +59,7 @@
 		</div>
 	</div>
 </form>
+
 <!-- 댓글 목록 -->
 <div class="card mt-4">
 	<div class="card-header">
@@ -66,6 +85,7 @@
 		<!-- 댓글 페이지 나누기 -->
 	</div>
 </div>
+
 <!-- 댓글 수정 폼 -->
 <div class="modal" tabindex="-1" id="replyModal">
   <div class="modal-dialog">
@@ -92,7 +112,6 @@
     </div>
   </div>
 </div>
-
 
 <form action="" id="operForm">
 	<input type="hidden" name="bno" value="${dto.bno}" />

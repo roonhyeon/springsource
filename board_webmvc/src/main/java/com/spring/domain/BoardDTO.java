@@ -1,6 +1,7 @@
 package com.spring.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +18,7 @@ public class BoardDTO {
 	private Date regDate;
 	private Date updateDate;
 	private int replyCnt;
+	// 첨부파일 정보
+	private List<AttachFileDTO> attachList;
 
 }

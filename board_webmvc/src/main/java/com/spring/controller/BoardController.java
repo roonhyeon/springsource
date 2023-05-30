@@ -50,6 +50,11 @@ public class BoardController {
 	public String register(BoardDTO boardDTO, RedirectAttributes rttr, Criteria cri) {
 		log.info("register request "+boardDTO);
 		
+		// 첨부파일 확인
+//		if(boardDTO.getAttachList() != null) {
+//			boardDTO.getAttachList().forEach(attach -> log.info(attach.toString()));
+//		}
+		
 		boolean insertFlag=service.register(boardDTO);
 		if(insertFlag) {
 			log.info("글 번호: "+boardDTO.getBno()); // 게시글을 작성할 때마다 로그에 글 번호가 출력된다.
@@ -60,9 +65,8 @@ public class BoardController {
 			rttr.addAttribute("amount", cri.getAmount());
 			
 			return "redirect:/board/list";
-		} else {
-			return "/board/register";
 		}
+		return "/board/register";
 	}
 	
 	// http://localhost:8080/board/read??page=1&amount=10&bno=917

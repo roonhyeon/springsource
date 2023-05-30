@@ -27,6 +27,13 @@
     <!-- Bootstrap core JavaScript -->
     <script src="/resources/vendor/jquery/jquery.min.js"></script> <!-- Modal 창을 띄우기 위한 코드 -->
     <script src="/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- lightbox -->
+    <link href="/resources/css/lightbox/lightbox.min.css" rel="stylesheet">
+    <script src="/resources/js/lightbox/lightbox.min.js"></script>
+    
+    <!-- upload css -->
+    <link href="/resources/css/upload.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
