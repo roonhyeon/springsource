@@ -11,4 +11,14 @@
 <select id="getRow" resultType="com.spring.domain.AttachFileDTO">
 	select uuid, uploadpath, filename, filetype, bno from spring_attach where bno=#{bno}
 </select>
+
+<!-- bno와 일치하는 첨부파일 제거 -->
+<delete id="deleteAll">
+	delete from spring_attach where bno=#{bno}
+</delete>
+
+<!-- 어제 날짜의 첨부파일 목록 추출 -->
+<select id="oldFiles" resultType="com.spring.domain.AttachFileDTO">
+	select * from spring_attach where uploadpath=to_char(sysdate-1,'yyyy\mm\dd')
+</select>
 </mapper>

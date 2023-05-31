@@ -6,11 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.domain.AttachFileDTO;
 import com.spring.domain.BoardDTO;
 import com.spring.domain.Criteria;
 import com.spring.mapper.AttachMapper;
 import com.spring.mapper.BoardMapper;
+import com.spring.mapper.ReplyMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class BoardServiceImpl implements BoardService {
 	
@@ -19,6 +24,9 @@ public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	private AttachMapper attachMapper;
+	
+	@Autowired
+	private ReplyMapper replyMapper;
 	
 	@Override
 	public List<BoardDTO> getList(Criteria cri) {
@@ -46,22 +54,55 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public BoardDTO read(int bno) {
+		
+//		BoardDTO dto=mapper.readAttach(bno);
+//		log.info("상세 + 파일첨부 "+dto);
+		
 		return mapper.read(bno);
 	}
 
+	@Transactional // 서로 다른 테이블에 접근하고 있으므로
 	@Override
 	public boolean modify(BoardDTO boardDTO) {
-		return mapper.modify(boardDTO)==1 ? true:false;
+		boolean modifyFlag = mapper.modify(boardDTO)==1 ? true:false;
+		
+		// 기존 첨부목록 제거
+		attachMapper.deleteAll(boardDTO.getBno());
+		
+		// 첨부파일이 있다면
+		if(boardDTO.getAttachList()==null || boardDTO.getAttachList().size()==0) {
+			return modifyFlag;
+		}
+		
+		// 첨부목록 삽입
+		boardDTO.getAttachList().forEach(attach -> {
+			attach.setBno(boardDTO.getBno());
+			attachMapper.insert(attach);
+		});
+		return modifyFlag;
 	}
 
+	@Transactional // 하나라도 실패 시에 되돌리기 위한 장치
 	@Override
 	public boolean remove(int bno) {
+		
+		// 자식 댓글 삭제
+		replyMapper.deleteAll(bno);
+		
+		// 첨부파일 삭제
+		attachMapper.deleteAll(bno);
+		
 		return mapper.remove(bno)==1 ? true:false;
 	}
 
 	@Override
 	public int getTotalCnt(Criteria cri) {
 		return mapper.totalCnt(cri);
+	}
+
+	@Override
+	public List<AttachFileDTO> getAttachList(int bno) {
+		return attachMapper.getRow(bno);
 	}
 
 }

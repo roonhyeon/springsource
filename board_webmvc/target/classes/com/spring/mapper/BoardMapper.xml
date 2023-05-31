@@ -76,6 +76,31 @@ WHERE RN>(#{page}-1)*#{amount}
     select bno, title, content, writer from spring_board where bno=#{bno}
 </select>
 
+<!-- 특정 번호 조회 + 파일 정보 
+     property: dto 변수명과 일치
+-->
+<resultMap type="com.spring.domain.BoardDTO" id="boardMap">
+	<id property="bno" column="bno"/>
+	<result property="title" column="title"/>
+	<result property="content" column="content"/>
+	<result property="writer" column="writer"/>
+	<collection property="attachList" resultMap="attachMap"/>
+</resultMap>
+
+<resultMap type="com.spring.domain.AttachFileDTO" id="attachMap">
+	<result property="uuid" column="uuid"/>
+	<result property="uploadPath" column="uploadPath"/>
+	<result property="fileName" column="fileName"/>
+	<result property="fileType" column="fileType"/>
+	<result property="bno" column="bno"/>
+</resultMap>
+
+<select id="readAttach" resultMap="boardMap">
+select title, content, writer, b.bno, uuid, uploadpath, filetype, filename
+from spring_board b join spring_attach a on b.bno=a.bno
+where b.bno=#{bno}
+</select>
+
 <!-- 게시글 수정: bno 일치 시(title, content, updatedate) -->
 <update id="modify">
     update spring_board set title=#{title}, content=#{content}, updatedate=sysdate where bno=#{bno}

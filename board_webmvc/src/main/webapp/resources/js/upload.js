@@ -79,6 +79,9 @@ function showUploadedFile(uploadResultArr) {
   document.querySelector(".uploadResult ul").insertAdjacentHTML("beforeend", str);
 }
 
+// x 클릭 시 첨부파일 제거
+// register.jsp에서 사용하는 개념하고 modify.jsp에서 사용하는 개념은 다름
+
 // x 클릭 시 alert() 창 띄우기: 이벤트 전파 개념(부모에 이벤트를 걸어준다.)
 document.querySelector(".uploadResult").addEventListener("click", (e) => {
   // 자식한테 이벤트가 일어나면 부모에게 전파
@@ -94,26 +97,34 @@ document.querySelector(".uploadResult").addEventListener("click", (e) => {
   // x가 눌려진 li 가져오기
   const li = e.target.closest("li");
 
-  const formData = new FormData();
-  formData.append("fileName", targetFile);
-  formData.append("type", type);
-
-  // /deleteFile?fileName=2023/05/30/test.jpg&type=image처럼 주소창을 보내고 싶다:
-  // const data = new URLSearchParams(formData);
-
-  fetch("/deleteFile", {
-    method: "post",
-    body: formData,
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("파일 제거 실패");
-      }
-      return response.text();
-    })
-    .then((data) => {
-      console.log(data);
+  if (path.match("modify")) {
+    // modify 요청 처리
+    if (confirm("정말로 파일을 삭제하시겠습니까?")) {
       li.remove();
+    }
+  } else {
+    // register 요청 처리
+    const formData = new FormData();
+    formData.append("fileName", targetFile);
+    formData.append("type", type);
+
+    // /deleteFile?fileName=2023/05/30/test.jpg&type=image처럼 주소창을 보내고 싶다:
+    // const data = new URLSearchParams(formData);
+
+    fetch("/deleteFile", {
+      method: "post",
+      body: formData,
     })
-    .catch((error) => console.log(error));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("파일 제거 실패");
+        }
+        return response.text();
+      })
+      .then((data) => {
+        console.log(data);
+        li.remove();
+      })
+      .catch((error) => console.log(error));
+  }
 });

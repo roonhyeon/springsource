@@ -37,7 +37,13 @@ WHERE RN>(#{cri.page}-1)*#{cri.amount}
 	update spring_reply set reply=#{reply}, updatedate=sysdate where rno=#{rno}
 </update>
 
+<!-- 댓글 하나 삭제 -->
 <delete id="remove">
 	delete from spring_reply where rno=#{rno}
+</delete>
+
+<!-- bno와 일치하는 댓글 전체 제거 -->
+<delete id="deleteAll">
+	delete from spring_reply where bno=#{bno}
 </delete>
 </mapper>

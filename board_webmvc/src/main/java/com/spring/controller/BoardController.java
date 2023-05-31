@@ -1,9 +1,14 @@
 package com.spring.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.spring.domain.AttachFileDTO;
 import com.spring.domain.BoardDTO;
 import com.spring.domain.Criteria;
 import com.spring.domain.PageDTO;
@@ -100,8 +106,14 @@ public class BoardController {
 	
 	@GetMapping("/remove")
 	public String removeGet(int bno, RedirectAttributes rttr, Criteria cri) {
+
+		// 폴더에서 첨부파일 제거
+		List<AttachFileDTO> attachList = service.getAttachList(bno);
+		deleteAttachFiles(attachList);
+		
 		// 삭제 성공 시 리스트로 가기
 		service.remove(bno);
+		
 		rttr.addFlashAttribute("result", "success");
 		
 		// 페이지 나누기 정보 주소줄에 같이 보내기
@@ -113,6 +125,38 @@ public class BoardController {
 		rttr.addAttribute("keyword", cri.getKeyword());
 		
 		return "redirect:/board/list";
+	}
+	
+	// 첨부 파일 가져오기(/getAttachList) + GET + bno
+	@GetMapping("/getAttachList")
+	public ResponseEntity<List<AttachFileDTO>> attachList(int bno){
+		List<AttachFileDTO> attachList=service.getAttachList(bno);
+		
+		return attachList != null ? new ResponseEntity<List<AttachFileDTO>>(attachList, HttpStatus.OK):
+			new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	private void deleteAttachFiles(List<AttachFileDTO> attachList) {
+		log.info("첨부 파일 폴더에서 제거");
+		
+		if(attachList == null || attachList.size() <= 0) return;
+		
+		for(AttachFileDTO dto : attachList) {
+			// 파일 경로
+			Path path=Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\"+dto.getUuid()+"_"+dto.getFileName());
+			
+			try {
+				Files.deleteIfExists(path);
+				
+				// 이미지 파일인 경우 썸네일 제거
+				if(Files.probeContentType(path).startsWith("image")) {
+					Path thumb=Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\s_"+dto.getUuid()+"_"+dto.getFileName());
+					Files.deleteIfExists(thumb);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }

@@ -7,5 +7,8 @@ import com.spring.domain.AttachFileDTO;
 public interface AttachMapper {
 	public int insert(AttachFileDTO dto);
 	public List<AttachFileDTO> getRow(int bno);
+	public int deleteAll(int bno);
+	
+	public List<AttachFileDTO> oldFiles();
 
 }

@@ -4,13 +4,19 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- @Service 활성화시키는 코드 -->
 	<context:component-scan base-package="com.spring.service"/>
+	<!-- @Component 어노테이션 -->
+	<context:component-scan base-package="com.spring.schedule"/>
+	<!-- @Scheduled 어노테이션 -->
+	<task:annotation-driven/>
 	
 	<!-- dbcp by HikariCP -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
