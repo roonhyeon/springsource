@@ -29,5 +29,4 @@ public class ServletConfig implements WebMvcConfigurer {
 		registry.viewResolver(resolver);
 	}
 	
-
 }

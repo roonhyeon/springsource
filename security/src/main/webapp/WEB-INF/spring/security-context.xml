@@ -7,17 +7,34 @@
 
 	<!-- 인증: 현재 사용자가 누구인지 확인하는 과정, 아이디/암호를 이용해서 인증을 주로 처리(폼 로그인 방식) -->
 
-	<bean id="customLoginSuccessHandler" class="com.spring.handler.CustomLoginSuccessHandler"></bean>
+	<bean id="customLoginSuccessHandler" class="com.spring.handler.CustomLoginSuccessHandler"/>
+	<bean id="customAccessDeniedHandler" class="com.spring.handler.CustomAccessDeniedHandler"/>
 
 	<security:http>
-		<!-- 폼 로그인 인증 방식을 선택 -->
+		<!-- 폼 로그인 인증 방식을 선택 
+			 login-page: 컨트롤러 경로(로그인 폼 페이지)
+			 authentication-failure-url: 로그인 정보가 틀렸을 때 컨트롤러 경로
+			 authentication-success-handler-ref: 로그인이 성공한 이후에 처리해야할 것(객체 사용)
+		-->
 		<security:form-login login-page="/security/login" authentication-failure-url="/security/login-error"
 		authentication-success-handler-ref="customLoginSuccessHandler"/> <!-- 디폴트 페이지가 이제 더이상 localhost:8080이 아니라 localhost:8080/login 이다. -->
-		<!-- 로그아웃 -->
+		
+		<!-- 403 페이지를 그대로 보여주면 기분 나쁨 방지를 위해 커스텀 접근 제한 페이지 설정
+			 error-page: 컨트롤러 경로
+			 => error-page="/security/access-denied" 
+			 ref="bean id 기입"
+		-->
+		<security:access-denied-handler ref="customAccessDeniedHandler"/>
+		
+		<!-- 로그아웃 
+			 logout post 시 해야하는 작업	
+		-->
 		<security:logout invalidate-session="true" delete-cookies="remember-me, JSESSION_ID"/> <!-- invalidate-session: 자동으로 세션 날라간다. -->
-	    <!-- 관리자 페이지, 유저 페이지 접근 권한 -->
-	    <security:intercept-url pattern="/security/userpage" access="hasRole('ROLE_USER')"/>
-	    <security:intercept-url pattern="/security/adminpage" access="hasRole('ROLE_ADMIN')"/>
+	    
+	    <!-- 특정 경로를 요청 시 적절한 (관리자 페이지, 유저 페이지 접근) 권한 여부를 확인한 후 로그인 페이지로 이동하거나 403 페이지로 이동 -->
+	    <!-- <security:intercept-url pattern="/security/userpage" access="hasRole('ROLE_USER')"/>
+	    <security:intercept-url pattern="/security/adminpage" access="hasRole('ROLE_ADMIN')"/> -->
+	    <!-- 여기서 막은 코드 SecurityController에 재정의 -->
 	</security:http>
 	
 	<!-- 비밀번호는 무조건 암호화 상태여야 한다: {noop} => 암호화 하지 말기 -->

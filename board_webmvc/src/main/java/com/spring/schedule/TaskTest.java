@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,17 +36,29 @@ public class TaskTest {
 		
 		// oldList에 있는 정보들 ==> 경로로 변경해야 한다.
 		// 이미지 파일이라면 파일 목록 + 썸네일 경로 추가
-		List<Path> pathList=new ArrayList<Path>();
+//		List<Path> pathList=new ArrayList<Path>();
+//		
+//		for (AttachFileDTO dto : oldList) {
+//			Path path=Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\"+dto.getUuid()+"_"+dto.getFileName());
+//			pathList.add(path);
+//			
+//			if(dto.isFileType()) {
+//				Path thumb=Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\s_"+dto.getUuid()+"_"+dto.getFileName());
+//				pathList.add(thumb);
+//			}
+//		}
 		
-		for (AttachFileDTO dto : oldList) {
-			Path path=Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\"+dto.getUuid()+"_"+dto.getFileName());
-			pathList.add(path);
-			
-			if(dto.isFileType()) {
-				Path thumb=Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\s_"+dto.getUuid()+"_"+dto.getFileName());
-				pathList.add(thumb);
-			}
-		}
+		// oldList를 stream으로 변환
+		List<Path> pathList=
+				oldList.stream()
+					   .map(dto -> Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\"+dto.getUuid()+"_"+dto.getFileName()))
+					   .collect(Collectors.toList());
+		
+		oldList.stream()
+			   .filter(dto -> dto.isFileType())
+		       .map(dto -> Paths.get("c:\\upload\\"+dto.getUploadPath()+"\\s_"+dto.getUuid()+"_"+dto.getFileName()))
+		       .forEach(dto -> pathList.add(dto));
+		  
 		System.out.println(pathList);
 		
 		
