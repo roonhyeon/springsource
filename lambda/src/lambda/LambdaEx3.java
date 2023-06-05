@@ -1,7 +1,6 @@
 package lambda;
 
 public class LambdaEx3 {
-
 	public static void main(String[] args) {
 		
 		Lambda3 lambda=(x) -> System.out.println(x);

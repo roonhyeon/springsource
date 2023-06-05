@@ -24,7 +24,7 @@
 			<label for="floatingPassword">Password</label>
 		</div>
 		<div class="checkbox mb-3">
-			<label> <input type="checkbox" value="remember-me"> Remember me </label>
+			<label> <input type="checkbox" name="remember-me"> Remember me </label>
 		</div>
 		<div>
 			<span class="text-danger">${error}</span> <!-- 비밀번호 틀렸을 때 -->

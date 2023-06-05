@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class LambdaEx6 {
-
 	public static void main(String[] args) {
 		// 문자열을 리턴하는 기능 구현 => LambdaEx5의 1) 사용
 		Supplier<String> s = () -> "안녕하세요";

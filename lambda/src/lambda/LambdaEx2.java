@@ -1,7 +1,6 @@
 package lambda;
 
 public class LambdaEx2 {
-
 	public static void main(String[] args) {
 		// Lambda2 인터페이스를 사용하고 싶다면??
 		// 1) 구현 클래스 작성: 클래스명 implements Lambda2

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.mapper.MemberMapper">
+
+<!-- 회원조회: 로그인 -->
+<resultMap type="com.spring.domain.MemberDTO" id="MemberDTO">
+	<!-- property는 DTO 변수명이랑 맞추고, column은 db 변수명이랑 맞추면 된다. -->
+	<id property="userid" column="userid"/> 
+	<result property="userpw" column="userpw"/>
+	<result property="username" column="username"/>
+	<result property="regdate" column="regdate"/>
+	<result property="updatedate" column="updatedate"/>
+	<result property="enabled" column="enabled"/>
+	<collection property="authorities" resultMap="authList"/>
+</resultMap>
+
+<resultMap type="com.spring.domain.MemberAuthDTO" id="authList">
+	<result property="userid" column="userid"/>
+	<result property="auth" column="auth"/>
+</resultMap>
+
+<select id="read" resultMap="MemberDTO">
+select m.userid, m.userpw, m.username, m.regdate, m.updatedate, m.enabled, a.auth 
+from spring_member m left outer join spring_member_auth a on m.userid=a.userid
+where m.userid=#{userid}
+</select>
+
+</mapper>
