@@ -6,9 +6,14 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	<bean id="loginHandler" class="com.spring.handler.CustomLoginSuccessHandler"/>
 
 	<security:http>
-		<security:form-login login-page="/member/login"/>
+		<security:form-login login-page="/member/login" 
+					authentication-failure-url="/member/login-error" 
+					authentication-success-handler-ref="loginHandler"/>
+		<security:logout logout-success-url="/"/>
+		<security:remember-me data-source-ref="ds" token-validity-seconds="604800"/>
 	</security:http>
 	
 	<security:authentication-manager>

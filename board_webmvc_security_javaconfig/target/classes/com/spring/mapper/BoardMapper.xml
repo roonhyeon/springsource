@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.mapper.BoardMapper">
+
+<!-- 전체 조회(페이지 나누기 전) -->
+<!-- <select id="list" resultType="com.spring.domain.BoardDTO">
+    select bno, title, writer, regdate, updatedate from spring_board order by bno desc, regdate desc
+</select> -->
+
+<!-- 전체 조회(페이지 나눈 후) -->
+<select id="list" resultType="com.spring.domain.BoardDTO">
+<![CDATA[
+SELECT BNO, TITLE, WRITER, REGDATE, UPDATEDATE, replycnt
+FROM (SELECT /*+INDEX_DESC(SPRING_BOARD PK_SPRING_BOARD)*/ ROWNUM RN, BNO, TITLE, WRITER, REGDATE, UPDATEDATE, replycnt
+      FROM SPRING_BOARD
+      WHERE 
+]]>      
+	<include refid="criteria"></include>   
+<![CDATA[   
+      ROWNUM<=#{page}*#{amount})
+WHERE RN>(#{page}-1)*#{amount}
+]]> <!-- 이 안에 넣어주면 <,> 기호가 크다, 작다를 의미하는 기호야~라고 인식시켜 주는 것이다. -->
+</select>
+
+<!-- 전체 게시물 개수: totalCnt -->
+<select id="totalCnt" resultType="java.lang.Integer">
+    select count(*) from spring_board
+    where
+    <include refid="criteria"></include>
+    bno > 0
+</select>
+
+<!-- 댓글 수 추가 -->
+<update id="updateReplyCnt" >
+	update spring_board set replycnt=replycnt+#{amount}
+	where bno=#{bno}
+</update>
+
+<!-- 동적 쿼리 
+	 board/list?page=1&amount=10&type=C&keyword=스프링 요청
+     collection="typeArr" => Criteria 객체의 getTypeArr() 메서드 실행됨 => [C] 출력
+     item="type" => 배열 요소를 접근하기 위한 변수
+-->
+<sql id="criteria">
+	<trim prefix="(" suffix=") AND" prefixOverrides="OR"> <!-- 출력되는 코드 맨 앞에 OR가 들어가면 OR는 무시해주세요. -->
+		<foreach collection="typeArr" item="type">
+			<trim prefix="OR">
+				<choose>
+					<when test="type == 'T'.toString()">
+						title like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'C'.toString()">
+						content like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'W'.toString()">
+						writer like '%'||#{keyword}||'%'
+					</when>
+				</choose>
+			</trim>
+		</foreach>
+	</trim>
+</sql>
+
+<!-- 게시글 등록 -->
+<insert id="insert">
+    <!-- mybatis에 정의된 기능: 주로 pk 값을 미리 SQL을 통해서 처리해 두고 특정한 이름으로 결과를 보관한다. => seq_board.nextval 이 값을 bno에 담아줘 -->
+    <selectKey keyProperty="bno" order="BEFORE" resultType="int">
+        select seq_board.nextval from dual
+    </selectKey>
+    <!-- 그래서 여기도 동일하게 DTO의 bno에 seq_board.nextval 값이 담기게 되어서 그냥 bno만 호출해와도 된다. -->
+    insert into spring_board(bno, title, content, writer) values(#{bno}, #{title}, #{content}, #{writer})
+</insert>
+
+<!-- 특정 번호의 게시물 조회 -->
+<select id="read" resultType="com.spring.domain.BoardDTO">
+    select bno, title, content, writer from spring_board where bno=#{bno}
+</select>
+
+<!-- 특정 번호 조회 + 파일 정보 
+     property: dto 변수명과 일치
+-->
+<resultMap type="com.spring.domain.BoardDTO" id="boardMap">
+	<id property="bno" column="bno"/>
+	<result property="title" column="title"/>
+	<result property="content" column="content"/>
+	<result property="writer" column="writer"/>
+	<collection property="attachList" resultMap="attachMap"/>
+</resultMap>
+
+<resultMap type="com.spring.domain.AttachFileDTO" id="attachMap">
+	<result property="uuid" column="uuid"/>
+	<result property="uploadPath" column="uploadPath"/>
+	<result property="fileName" column="fileName"/>
+	<result property="fileType" column="fileType"/>
+	<result property="bno" column="bno"/>
+</resultMap>
+
+<select id="readAttach" resultMap="boardMap">
+select title, content, writer, b.bno, uuid, uploadpath, filetype, filename
+from spring_board b join spring_attach a on b.bno=a.bno
+where b.bno=#{bno}
+</select>
+
+<!-- 게시글 수정: bno 일치 시(title, content, updatedate) -->
+<update id="modify">
+    update spring_board set title=#{title}, content=#{content}, updatedate=sysdate where bno=#{bno}
+</update>
+
+<!-- 게시글 삭제 -->
+<delete id="remove">
+    delete from spring_board where bno=#{bno}
+</delete>
+
+</mapper>
